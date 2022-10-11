@@ -1,0 +1,77 @@
+From 7600ab7f23e732062ce5ff34a42ca0f1ce019702 Mon Sep 17 00:00:00 2001
+From: Sam <tritoke@protonmail.com>
+Date: Fri, 23 Jul 2021 18:38:03 +0100
+Subject: [PATCH] Created rotatetags function, and keybinds.
+
+- Added rotatetags function which rotates the tagset left / right the
+given number of tags, including wrapping round the ends if necessary.
+
+- Added keybinds for MOD + left and right arrows, moving the tagset left /
+right respectively.
+---
+ config.def.h |  2 ++
+ dwm.c        | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+
+diff --git a/config.def.h b/config.def.h
+index 1c0b587..2992431 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -84,6 +84,8 @@ static Key keys[] = {
+ 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
+ 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
+ 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
++	{ MODKEY,                       XK_Left,   rotatetags,     {.i = -1 } },
++	{ MODKEY,                       XK_Right,  rotatetags,     {.i = +1 } },
+ 	TAGKEYS(                        XK_1,                      0)
+ 	TAGKEYS(                        XK_2,                      1)
+ 	TAGKEYS(                        XK_3,                      2)
+diff --git a/dwm.c b/dwm.c
+index 4465af1..768166e 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -192,6 +192,7 @@ static void resize(Client *c, int x, int y, int w, int h, int interact);
+ static void resizeclient(Client *c, int x, int y, int w, int h);
+ static void resizemouse(const Arg *arg);
+ static void restack(Monitor *m);
++static void rotatetags(const Arg *arg);
+ static void run(void);
+ static void scan(void);
+ static int sendevent(Client *c, Atom proto);
+@@ -1369,6 +1370,33 @@ restack(Monitor *m)
+ 	while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
+ }
+ 
++void
++rotatetags(const Arg *arg)
++{
++	const int rot = abs(arg->i);
++	const unsigned int tagset = selmon->tagset[selmon->seltags];
++	unsigned int newtagset;
++
++	/* check the direction of the shift */
++	if (arg->i < 0) {
++		 /* shift tags right */
++		 newtagset = (tagset >> rot) | (tagset << (LENGTH(tags) - rot));
++	} else {
++		 /* shift tags left */
++		 newtagset = (tagset << rot) | (tagset >> (LENGTH(tags) - rot));
++	}
++
++	/* mask the tag bits */
++	newtagset &= TAGMASK;
++
++	if (newtagset) {
++		 selmon->tagset[selmon->seltags] = newtagset;
++		 focus(NULL);
++		 arrange(selmon);
++	}
++}
++
++
+ void
+ run(void)
+ {
+-- 
+2.32.0
+

@@ -88,11 +88,12 @@ static const Key keys[] = {
 	{ MODKEY,               36,    zoom,           {0} },             // Return
 	{ MODKEY,               23,    view,           {0} },             // Tab
 	{ MODKEY|ShiftMask,     54,    killclient,     {0} },             // c
-	{ MODKEY,               41,    setlayout,      {.v = &layouts[0]} }, // t
-	{ MODKEY,               26,    setlayout,      {.v = &layouts[1]} }, // f
-	{ MODKEY,               55,    setlayout,      {.v = &layouts[2]} }, // m
+	{ MODKEY,               41,    setlayout,      {.v = &layouts[0]} }, // f colemak:t
+	{ MODKEY,               26,    setlayout,      {.v = &layouts[1]} }, // e colemak:f
+	{ MODKEY,               55,    setlayout,      {.v = &layouts[2]} }, // v
 	{ MODKEY,               65,    setlayout,      {0} },             // space
 	{ MODKEY|ShiftMask,     65,    togglefloating, {0} },             // space
+	{ MODKEY|ShiftMask,     26,    fullscreen,     {0} },             // e colemak:f 
 	{ MODKEY,               19,    view,           {.ui = ~0 } },     // 0
 	{ MODKEY|ShiftMask,     19,    tag,            {.ui = ~0 } },     // 0
 	{ MODKEY,               59,    focusmon,       {.i = -1 } },      // comma

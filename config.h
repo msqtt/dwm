@@ -100,6 +100,8 @@ static const Key keys[] = {
 	{ MODKEY,               60,    focusmon,       {.i = +1 } },      // period
 	{ MODKEY|ShiftMask,     59,    tagmon,         {.i = -1 } },      // comma
 	{ MODKEY|ShiftMask,     60,    tagmon,         {.i = +1 } },      // period
+	{ MODKEY|ShiftMask,     44,    rotatetags,     {.i = -1 } },      // j
+	{ MODKEY|ShiftMask,     45,    rotatetags,     {.i = +1 } },      // k
 	TAGKEYS(                10,                    0)                 // 1
 	TAGKEYS(                11,                    1)                 // 2
 	TAGKEYS(                12,                    2)                 // 3
