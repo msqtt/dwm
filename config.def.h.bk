@@ -67,6 +67,7 @@ static const Layout layouts[] = {
 /* commands */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *slock[]  = { "slock", NULL };
 
 static const char *volup[]  = { "volup.sh", NULL };
 static const char *voldown[]  = { "voldown.sh", NULL };
@@ -79,6 +80,7 @@ static const Key keys[] = {
 	/* modifier             key    function        argument */
 	{ MODKEY,               24,    spawn,          {.v = dmenucmd } }, // q
 	{ MODKEY|ShiftMask,     36,    spawn,          {.v = termcmd } }, // Return
+	{ MODKEY|ShiftMask,     30,    spawn,          {.v = slock } }, // Return
 	{ MODKEY,               56,    togglebar,      {0} },             // b
 	{ MODKEY,               44,    focusstack,     {.i = +1 } },      // j
 	{ MODKEY,               45,    focusstack,     {.i = -1 } },      // k

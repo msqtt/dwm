@@ -5,6 +5,8 @@
 way="wlan0"
 rx_pre=$(cat /proc/net/dev | grep "$way" | awk -F' ' '{print $2}')
 tx_pre=$(cat /proc/net/dev | grep "$way" | awk -F' ' '{print $10}')
+rx_b="Kbs"
+tx_b="Kbs"
 
 while true; do
 	if [ "$(ip address | grep enp | grep inet)" ]; then
@@ -13,8 +15,8 @@ while true; do
 		way="wlan0"
 	fi
 
-	battery=$(acpi -b | cut -d',' -f2 | cut -d' ' -f2)
-	battery_st=$(acpi -b | cut -d',' -f1 | cut -d' ' -f3)
+	battery=$(acpi -b | head -n 1 | cut -d',' -f2 | cut -d' ' -f2)
+	battery_st=$(acpi -b | head -n 1 | cut -d',' -f1 | cut -d' ' -f3)
 	vol=$(amixer -c 1 get Master | grep 'Mono:' | cut -d'[' -f2 | cut -d']' -f1)
 	mute=$(amixer -c 1 get Master | grep 'Mono:' | cut -d']' -f3 | cut -d'[' -f2)
 	rx_now=$(cat /proc/net/dev | grep "$way" | awk -F' ' '{print $2}')
@@ -41,7 +43,20 @@ while true; do
 	tx=$(expr $tx_now - $tx_pre)
 	tx=$(expr $tx / 1024)
 
-	xsetroot -name ":$rx Kbs 祝:$tx Kbs [$way]| $battery_st:$battery | $mute:$vol | $(date +"%a %m.%d %H:%M")"
+	if [ $rx -gt 1024 ]; then
+		rx=$(expr $rx / 1024)
+		rx_b="Ms"
+	else
+		rx_b="Kbs"
+	fi
+	if [ $tx -gt 1024 ]; then
+		tx=$(expr $tx / 1024)
+		tx_b="Ms"
+	else
+		tx_b="Kbs"
+	fi
+
+	xsetroot -name ":$rx $rx_b 祝:$tx $tx_b [$way]| $battery_st:$battery | $mute:$vol | $(date +"%a %m.%d %H:%M")"
 
 	rx_pre=$rx_now
 	tx_pre=$tx_now
