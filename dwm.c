@@ -225,6 +225,7 @@ static void scan(void);
 static int sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
+static void setsystraypin(const Arg *arg); // mychange
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
 static void fullscreen(const Arg *arg);
@@ -2599,6 +2600,11 @@ systraytomon(Monitor *m) {
 		return mons;
 	return t;
 }
+
+void
+setsystraypin(const Arg *arg){
+    systraypinning = arg->ui;
+} // mychange
 
 void
 zoom(const Arg *arg)

@@ -3,7 +3,7 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const unsigned int systraypinning = 1;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
+static unsigned int systraypinning = 1;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayonleft = 0;   	/* 0: systray in the right corner, >0: systray on left of status text */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
@@ -100,7 +100,10 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,     65,    togglefloating, {0} },             // space
 	{ MODKEY|ShiftMask,     26,    fullscreen,     {0} },             // e colemak:f 
 	{ MODKEY,               19,    view,           {.ui = ~0 } },     // 0
-	{ MODKEY|ShiftMask,     19,    tag,            {.ui = ~0 } },     // 0
+	{ MODKEY|ShiftMask,     19,    setsystraypin,  {.ui = 0} },     // 0 mychange 
+	{ MODKEY|ShiftMask,     10,    setsystraypin,  {.ui = 1} },     // 1 mychange
+	/* { MODKEY|ShiftMask,     19,    tag,            {.ui = ~0 } },     // 0 */
+
 	{ MODKEY,               59,    focusmon,       {.i = -1 } },      // comma
 	{ MODKEY,               60,    focusmon,       {.i = +1 } },      // period
 	{ MODKEY|ShiftMask,     59,    tagmon,         {.i = -1 } },      // comma

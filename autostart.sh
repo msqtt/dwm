@@ -5,3 +5,5 @@
 fcitx5 -d
 
 telegram-desktop &
+
+st -e signin.sh &
