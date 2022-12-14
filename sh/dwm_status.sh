@@ -43,20 +43,26 @@ while true; do
 	tx=$(expr $tx_now - $tx_pre)
 	tx=$(expr $tx / 1024)
 
-	if [ $rx -gt 1024 ]; then
-		rx=$(expr $rx / 1024)
-		rx_b="Ms"
+	showC=""
+	showX=0
+	showXB=""
+	if [ $rx -gt $tx ]; then
+		showC=""
+		showX=$rx
 	else
-		rx_b="Kbs"
-	fi
-	if [ $tx -gt 1024 ]; then
-		tx=$(expr $tx / 1024)
-		tx_b="Ms"
-	else
-		tx_b="Kbs"
+		showC="祝"
+		showX=$tx
 	fi
 
-	xsetroot -name ":$rx $rx_b 祝:$tx $tx_b [$way]| $battery_st:$battery | $mute:$vol | $(date +"%a %m.%d %H:%M")"
+	if [ $showX -gt 1024 ]; then
+		showX=$(expr $showX / 1024)
+		showXB="Ms"
+	else
+		showXB="Kbs"
+	fi
+
+	xsetroot -name "[$way] $showC:$showX$showXB| $battery_st:$battery| $mute:$vol| $(date +"%a %m.%d %H:%M")"
+	# echo "[$way] $showC:$showX$showXB| $battery_st:$battery| $mute:$vol| $(date +"%a %m.%d %H:%M")"
 
 	rx_pre=$rx_now
 	tx_pre=$tx_now
