@@ -6,13 +6,13 @@
 
 dunst &
 
-fcitx5 -d
-
 feishu &
-electron-qq &
+electron-qq --hide &
+
+cmk
 
 ttp.sh &
 
-# st -e signin.sh &
+fcitx5 -d
 
-cmk &
+# st -e signin.sh &

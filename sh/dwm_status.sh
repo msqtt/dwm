@@ -61,7 +61,7 @@ while true; do
 		showXB="Kbs"
 	fi
 
-	xsetroot -name "[$way] $showC:$showX$showXB| $battery_st:$battery| $mute:$vol| $(date +"%a %m.%d %H:%M")"
+	xsetroot -name "[$way] $showC:$showX$showXB · $battery_st:$battery · $mute:$vol · $(date +"%a %m.%d %H:%M")"
 	# echo "[$way] $showC:$showX$showXB| $battery_st:$battery| $mute:$vol| $(date +"%a %m.%d %H:%M")"
 
 	rx_pre=$rx_now
