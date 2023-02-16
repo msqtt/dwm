@@ -6,10 +6,9 @@
 
 dunst &
 
-feishu &
 electron-qq --hide &
 
-cmk
+wm.sh
 
 ttp.sh &
 

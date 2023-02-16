@@ -3,13 +3,14 @@
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
-static const unsigned int systrayonleft = 0;   	/* 0: systray in the right corner, >0: systray on left of status text */
+static unsigned int systraypinning = 1;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
+static const unsigned int systrayonleft = 1;   	/* 0: systray in the right corner, >0: systray on left of status text */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;     /* 0 means no bar */
 static const int topbar             = 1;     /* 0 means bottom bar */
+static const Bool viewontag         = True;     /* Switch view on tag switch */
 static const char *fonts[]          = { "monospace:size=10",
                                         "WenQuanYi Micro Hei Mono:size=10:style=Bold:antialias=true:autohint=true",
                                         "Symbols Nerd Font Mono:style=1000-em:size=9"
@@ -22,8 +23,8 @@ static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+	[SchemeNorm] = { col_gray3, col_gray1, /* col_gray2 */ "#111" },
+	[SchemeSel]  = { col_gray4, col_cyan, /* col_cyan */ "#f00"   },
 };
 
 /* tagging */
@@ -36,6 +37,7 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+	{ "Wine",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
@@ -66,6 +68,8 @@ static const Layout layouts[] = {
 /* commands */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *slock[]  = { "slock", NULL };
+static const char *shot[]  = { "flameshot", "gui", NULL};
 
 static const char *volup[]  = { "volup.sh", NULL };
 static const char *voldown[]  = { "voldown.sh", NULL };
@@ -78,6 +82,8 @@ static const Key keys[] = {
 	/* modifier             key    function        argument */
 	{ MODKEY,               24,    spawn,          {.v = dmenucmd } }, // q
 	{ MODKEY|ShiftMask,     36,    spawn,          {.v = termcmd } }, // Return
+	{ MODKEY|ShiftMask,     30,    spawn,          {.v = slock } }, // Return
+	{ MODKEY|ShiftMask,     38,    spawn,          {.v = shot } }, // Return
 	{ MODKEY,               56,    togglebar,      {0} },             // b
 	{ MODKEY,               44,    focusstack,     {.i = +1 } },      // j
 	{ MODKEY,               45,    focusstack,     {.i = -1 } },      // k
@@ -87,7 +93,7 @@ static const Key keys[] = {
 	{ MODKEY,               46,    setmfact,       {.f = +0.05} },    // l
 	{ MODKEY,               36,    zoom,           {0} },             // Return
 	{ MODKEY,               23,    view,           {0} },             // Tab
-	{ MODKEY|ShiftMask,     54,    killclient,     {0} },             // c
+  { MODKEY|ShiftMask,     53,    killclient,     {0} },             // c colemak: x
 	{ MODKEY,               41,    setlayout,      {.v = &layouts[0]} }, // f colemak:t
 	{ MODKEY,               26,    setlayout,      {.v = &layouts[1]} }, // e colemak:f
 	{ MODKEY,               55,    setlayout,      {.v = &layouts[2]} }, // v
@@ -95,7 +101,10 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,     65,    togglefloating, {0} },             // space
 	{ MODKEY|ShiftMask,     26,    fullscreen,     {0} },             // e colemak:f 
 	{ MODKEY,               19,    view,           {.ui = ~0 } },     // 0
-	{ MODKEY|ShiftMask,     19,    tag,            {.ui = ~0 } },     // 0
+	{ MODKEY|ShiftMask,     19,    setsystraypin,  {.ui = 0} },     // 0 mychange 
+	{ MODKEY|ShiftMask,     10,    setsystraypin,  {.ui = 1} },     // 1 mychange
+	/* { MODKEY|ShiftMask,     19,    tag,            {.ui = ~0 } },     // 0 */
+
 	{ MODKEY,               59,    focusmon,       {.i = -1 } },      // comma
 	{ MODKEY,               60,    focusmon,       {.i = +1 } },      // period
 	{ MODKEY|ShiftMask,     59,    tagmon,         {.i = -1 } },      // comma
@@ -114,9 +123,9 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,     9,     quit,           {0} },             // exit
     { MODKEY,               111,   spawn,          {.v = lightup } }, // up
     { MODKEY,               116,   spawn,          {.v = lightdown } },// down
-    { MODKEY,               113,   spawn,          {.v = voldown } }, // left
+    { MODKEY|ShiftMask,     111,   spawn,          {.v = volup } },   // up
+    { MODKEY|ShiftMask,     116,   spawn,          {.v = voldown } }, // down
     { MODKEY|ShiftMask,     113,   spawn,          {.v = voltoggle } },// left
-    { MODKEY,               114,   spawn,          {.v = volup } },   // right
 };
 
 /* button definitions */

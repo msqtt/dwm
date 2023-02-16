@@ -15,10 +15,20 @@ while true; do
 		way="wlan0"
 	fi
 
-	battery=$(acpi -b | head -n 1 | cut -d',' -f2 | cut -d' ' -f2)
-	battery_st=$(acpi -b | head -n 1 | cut -d',' -f1 | cut -d' ' -f3)
-	vol=$(amixer -c 1 get Master | grep 'Mono:' | cut -d'[' -f2 | cut -d']' -f1)
-	mute=$(amixer -c 1 get Master | grep 'Mono:' | cut -d']' -f3 | cut -d'[' -f2)
+  batcheck=$(acpi -b | grep 'Battery 1')
+  batinfo=""
+  
+  if [ -n $batcheck ] ;then
+    batinfo=$(acpi -b)
+  else
+    batinfo=$batcheck
+  fi
+
+
+	battery=$(echo $batinfo | cut -d',' -f2 | cut -d' ' -f2)
+	battery_st=$(echo $batinfo | cut -d',' -f1 | cut -d' ' -f3)
+	vol=$(amixer get Master | grep 'Left:' | cut -d'[' -f2 | cut -d']' -f1)
+	mute=$(amixer get Master | grep 'Left:' | cut -d'[' -f3 | cut -d']' -f1)
 	rx_now=$(cat /proc/net/dev | grep "$way" | awk -F' ' '{print $2}')
 	tx_now=$(cat /proc/net/dev | grep "$way" | awk -F' ' '{print $10}')
 
@@ -61,8 +71,9 @@ while true; do
 		showXB="Kbs"
 	fi
 
-	xsetroot -name "[$way] $showC:$showX$showXB · $battery_st:$battery · $mute:$vol · $(date +"%a %m.%d %H:%M")"
-	# echo "[$way] $showC:$showX$showXB| $battery_st:$battery| $mute:$vol| $(date +"%a %m.%d %H:%M")"
+	 xsetroot -name "[$way] $showC:$showX$showXB · $battery_st:$battery · $mute:$vol · $(date +"%a %m.%d %H:%M")"
+	 # echo "[$way] $showC:$showX$showXB| $battery_st:$battery| $mute:$vol| $(date +"%a %m.%d %H:%M")"
+
 
 	rx_pre=$rx_now
 	tx_pre=$tx_now
